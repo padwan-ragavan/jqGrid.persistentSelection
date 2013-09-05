@@ -2,6 +2,8 @@
 
 Persist selections through page navigations on jqGrid and selections can be accessed through the grid option `persistentSelection`.
 
+checkout the demo [here][Demo].
+
 # Usage
 
 	$("#jgGridTable").jqGrid({
@@ -13,4 +15,9 @@ Persist selections through page navigations on jqGrid and selections can be acce
 
 # Things to watchout for
 
-Set up the `onSelectRow`, `onSelectAll`, `gridComplete` *before* calling `persistSelection`, as persistentSelection hooks on to these events to track the selections. However, it does forward the events to these delegates if there were any.
+`persistSelection` forwards the `onSelectRow`, `onSelectAll`, `gridComplete` events to handlers if there were any.
+
+Set up these event handlers *before* calling `persistSelection`, as persistentSelection hooks on to these events to track the selections, or manually ensure the handler setup by `persistSelection` is chained.
+
+
+[Demo]: http://padwan-ragavan.github.io/jqGrid.persistentSelection/  "jqGrid persistentSelection demo"
