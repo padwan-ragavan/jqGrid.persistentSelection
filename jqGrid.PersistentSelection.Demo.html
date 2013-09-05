@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jqgrid </title>
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.9.2.custom.min.css">
+	<link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css">
+	<script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+	<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="js/grid.locale-en.js"></script>
+	<script type="text/javascript" src="js/jqGrid.persistentSelection.js"></script> 
+	<script type="text/javascript">
+		$(function () {
+			var totalRecords = 1000;
+			var totalPages = 10;
+			var rowsPerPage = totalRecords/totalPages;
+			
+			var rowsGenerator = function(page){
+				var rows = [];
+				for (var i = 0 ; i < rowsPerPage; i++) {
+					var rowId =(rowsPerPage * page) + i;
+					rows.push({id: rowId, one: rowId, two: "sampleText" + i, three: (i+""+i+""+i)});
+				};
+				return rows;
+			}
+
+			var dataGenerator = function(postdata){
+				console.log(postdata);
+				var data =  {
+					total: totalPages,
+					page: postdata.page,
+					records: totalRecords,
+					rows: rowsGenerator(postdata.page)
+				};
+				$("#test")[0].addJSONData(data);
+			};
+
+			$("#test").jqGrid({
+				caption: "test Grid",
+				gridview: true,
+				datatype: dataGenerator,
+				viewrecords: true,
+				colNames: ["One", "Two", "Three"],
+				pager: "#testPager",				
+				scrollrows: true,
+				rowNum: rowsPerPage,
+				colModel: [
+					{name:"one", width: 100},
+					{name:"two", width: 100},
+					{name:"three", width: 100}
+				],
+				multiselect: true,
+				height: 350,
+				width: 800
+			});
+
+			$("#test").jqGrid('persistSelection');
+			var selctionProxy = $("#test").jqGrid('getGridParam','onSelectRow');
+			$("#test").jqGrid('setGridParam',{'onSelectRow': function(){
+				selctionProxy.apply(this, arguments);
+				$("#selections").val($("#test").jqGrid('getGridParam','persistentSelection').join(","))				
+			}});
+			var selectAllProxy = $("#test").jqGrid('getGridParam','onSelectAll');
+			$("#test").jqGrid('setGridParam',{'onSelectAll': function(){
+				selectAllProxy.apply(this, arguments);
+				$("#selections").val($("#test").jqGrid('getGridParam','persistentSelection').join(","))				
+			}});
+		});
+	</script>
+</head>
+<body>
+<table id="test"></table>
+<div id="testPager"></div>
+<label for="selections"></label> <textarea id="selections" disabled="disabled"></textarea>>
+</body>
+</html>
