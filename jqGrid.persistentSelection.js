@@ -6,8 +6,6 @@ jQuery.jgrid.extend({
         var gridCompleteProxy = jQuery(this).jqGrid('getGridParam', 'gridComplete');
         jQuery(this).jqGrid('setGridParam', {
             'onSelectRow': function (rowId, status) {
-                if (!!onSelectRowProxy)
-                    onSelectRowProxy.apply(this, arguments);
                 var persistentSelection = jQuery(this).jqGrid('getGridParam', 'persistentSelection');
                 if (status) {
                     persistentSelection.push(rowId);
@@ -18,10 +16,10 @@ jQuery.jgrid.extend({
                     }
                 }
                 jQuery(this).jqGrid('setGridParam', { 'persistentSelection': persistentSelection });
+                if (!!onSelectRowProxy)
+                    onSelectRowProxy.apply(this, arguments);
             },
             'onSelectAll': function (aRowIds, status) {
-                if (!!onSelectAllProxy)
-                    onSelectAllProxy.apply(this, arguments);
                 var persistentSelection = jQuery(this).jqGrid('getGridParam', 'persistentSelection');
                 if (status) {
                     jQuery.each(aRowIds, function (i, v) {
@@ -39,6 +37,8 @@ jQuery.jgrid.extend({
                     });
                 }
                 jQuery(this).jqGrid('setGridParam', { 'persistentSelection': persistentSelection });
+                if (!!onSelectAllProxy)
+                    onSelectAllProxy.apply(this, arguments);
             },
             'gridComplete': function () {
                 if (!!gridCompleteProxy) {
